@@ -1,4 +1,4 @@
 # WEB_TEAM  
 
 Project description: 
-Do you want to lead a healthy lifestyle and monitor your health? Do you like to go to the mountains, and sometimes there is nobody to go with? Then go to our website, we will organize many different hiking trips for students and not only. You will love it!
+Online shopping store. Are you tired of complex authorization and buying simple goods in online shopping? Then go to our website, we will render to you simple outstanding online shop store. You will love it!
