@@ -1,7 +1,5 @@
-from abc import ABC
-
 from rest_framework import serializers
-from .models import Category, Sections
+from .models import Category, Sections, Product, Basket
 from django.contrib.auth.models import User
 
 
@@ -30,7 +28,7 @@ class CategorySerializer(serializers.Serializer):
 
 class CategorySerializer2(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField()
+    name = serializers.CharField(required=True)
     created_by = UserSerializer(read_only=True)
 
     class Meta:
@@ -39,31 +37,36 @@ class CategorySerializer2(serializers.ModelSerializer):
         # fields = '__all__'
 
 
-class SectionsSerializer(serializers.Serializer):
+class SectionsSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True)
+    category = CategorySerializer2(read_only=True)
 
-    def create(self, validated_data):
-        section = Sections(**validated_data)
-        section.save()
-        return section
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        return instance
+    class Meta:
+        model = Sections
+        fields = ('id', 'name', 'category',)
+        # fields = '__all__'
 
 
 class ProductSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
+    # img = serializers.CharField(required=False)
     name = serializers.CharField(required=True)
     price = serializers.FloatField()
     description = serializers.CharField()
     status = serializers.CharField()
-    category = CategorySerializer2()
+    sections = SectionsSerializer()
+
+    class Meta:
+        model = Product
+        fields = ('id', 'img', 'name', 'description', 'price', 'status', 'sections')
 
 
 class BasketSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
     product = ProductSerializer()
     count = serializers.IntegerField()
 
+    class Meta:
+        model = Basket
+        fields = ('id', 'product', 'count')

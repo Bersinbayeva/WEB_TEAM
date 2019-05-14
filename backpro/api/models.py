@@ -9,9 +9,9 @@ class CategoryManager(models.Manager):
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=2)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
 
-    objects = CategoryManager()
+    # objects = CategoryManager()
 
     class Meta:
         verbose_name = 'Category'
@@ -29,7 +29,11 @@ class Category(models.Model):
 
 class Sections(models.Model):
     name = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="section_c",blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Section'
+        verbose_name_plural = 'Sections'
 
     def __str__(self):
         return '{}: {}'.format(self.id, self.name)
@@ -42,11 +46,12 @@ class Sections(models.Model):
 
 
 class Product(models.Model):
+    # img = models.CharField(max_length=1000)
     name = models.CharField(max_length=200)
     price = models.FloatField()
     description = models.CharField(max_length=200)
     status = models.CharField(max_length=50)
-    sections = models.ForeignKey(Sections, on_delete=models.CASCADE)
+    sections = models.ForeignKey(Sections, on_delete=models.CASCADE, related_name="product", blank=True, null=True)
 
     def __str__(self):
         return '{}: {}'.format(self.id, self.name)
@@ -61,7 +66,7 @@ class Product(models.Model):
         }
 
 class Basket(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ManyToManyField(Product)
     count = models.IntegerField()
 
     def __str__(self):
